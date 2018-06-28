@@ -13,7 +13,7 @@ use imonroe\crps\Subject;
 use imonroe\ana\Ana;
 use Validator;
 
-class UnformattedTextAspect extends Aspect{
+class LambdaFunctionAspect extends Aspect{
 
     function __construct()
     {
@@ -28,39 +28,53 @@ class UnformattedTextAspect extends Aspect{
 
     public function create_form($subject_id, $aspect_type_id=null)
     {
-		$form = \BootForm::horizontal(['url' => '/aspect/create', 'method' => 'post', 'files' => false]);
+		$output = $this->display_aspect() . '<hr />';
+        $form = \BootForm::horizontal(['url' => '/aspect/create', 'method' => 'post', 'files' => true]);
         $form .= \BootForm::hidden('subject_id', $subject_id);
         $form .= \BootForm::hidden('aspect_type', $aspect_type_id);
         $form .= \BootForm::text('title', 'Title');
-        $form .= \BootForm::textarea('aspect_data', 'Unformatted Text');
-        $form .= \BootForm::text('aspect_source', 'Source');
-        //$form .= \BootForm::file('file_upload');
+        $form .= \BootForm::hidden('aspect_data', 'Aspect Data');
+        $form .= \BootForm::hidden('aspect_source');
+        $form .= \BootForm::hidden('hidden', 'Hidden?');
+        $form .= \BootForm::hidden('file_upload');
         $form .= $this->notes_fields();
         $form .= \BootForm::submit('Submit', ['class' => 'btn btn-primary']);
         $form .= \BootForm::close();
-        return $form;
+		$output .= $form;
+        return $output;
 	}
 
     public function edit_form()
     {
-		$form = \BootForm::horizontal(['url' => '/aspect/'.$this->id.'/edit', 'method' => 'post', 'files' => true]);
+		$output = $this->display_aspect() . '<hr />';
+        $form = \BootForm::horizontal(['url' => '/aspect/'.$this->id.'/edit', 'method' => 'post', 'files' => true]);
         $form .= \BootForm::hidden('aspect_id', $this->id);
         $form .= \BootForm::hidden('aspect_type', $this->aspect_type()->id);
-        $form .= \BootForm::text('title', 'Title', $this->title);
-        $form .= \BootForm::textarea('aspect_data', 'Unformatted Text', $this->aspect_data);
-        $form .= \BootForm::text('aspect_source', 'Source', $this->aspect_source);
-        //$form .= \BootForm::checkbox('hidden', 'Hidden?', $this->hidden);
-        //$form .= \BootForm::file('file_upload');
+        $form .= \BootForm::hidden('title', 'Title', $this->title);
+        $form .= \BootForm::hidden('aspect_data', 'Aspect Data', $this->aspect_data);
+        $form .= \BootForm::hidden('aspect_source', 'Source', $this->aspect_source);
+        $form .= \BootForm::hidden('hidden', 'Hidden?', $this->hidden);
+        $form .= \BootForm::hidden('file_upload');
         $form .= $this->notes_fields();
         $form .= \BootForm::submit('Submit', ['class' => 'btn btn-primary']);
         $form .= \BootForm::close();
-        return $form;
+        //return $form;
+        $output = $output + $form;
+        return $output;
 	}
 
     public function display_aspect()
     {
-        $output = parent::display_aspect();
+        $output = $this->lambda_function();
 		return $output;
+	}
+
+    /**
+     * Override the lambda function here to implement your own logic.
+     * Good basis for building new aspects based on API calls, etc.
+     */
+    public function lambda_function(){
+		return 'lambda_function output';
 	}
 
     public function parse()

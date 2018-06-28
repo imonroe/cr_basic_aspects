@@ -13,7 +13,7 @@ use imonroe\crps\Subject;
 use imonroe\ana\Ana;
 use Validator;
 
-class ImageAspect extends Aspect{
+class ImageAspect extends FileUploadAspect{
 
     function __construct()
     {
@@ -23,6 +23,8 @@ class ImageAspect extends Aspect{
     public function notes_schema()
     {
 		$settings = json_decode(parent::notes_schema(), true);
+		$settings['width'] = '100%';
+		$settings['height'] = '';
 		return json_encode($settings);
 	}
 
@@ -31,17 +33,35 @@ class ImageAspect extends Aspect{
 		return parent::create_form($subject_id, $this->aspect_type);
 	}
 
-    public function edit_form($id)
+    public function edit_form()
     {
-		return parent::edit_form($id);
+		return parent::edit_form();
 	}
 
     public function display_aspect()
     {
-        $parent_output = parent::display_aspect();
-        $new_output = '<p>Some markup.</p>';
-		return $parent_output . $new_output;
-	}
+        // There will be uploaded file(s) associated with this aspect, so let's grab them.
+        $media_items = $this->media;
+        $css_size = '';
+        $settings = (array) json_decode($this->aspect_notes);
+        if ( !empty($settings['width']) ){
+            $css_size = 'style="width:'.$settings['width'].';';
+            if ( !empty($settings['height']) ){
+                $css_size .= ' height:'.$settings['height'].';';
+            }
+            $css_size .= '"';
+        }
+        $output = '';
+        foreach ($media_items as $file){
+            $output .= '<div class="image_aspect_display">'.PHP_EOL;
+            $output .= '<img src="'.$file->getUrl().'" '.$css_size.' />';
+            $output .= '<div class="image_caption">'.$this->aspect_data.'</div>';
+            $output .= '</div>'.PHP_EOL;
+            $output .= '<p><a href="'.$file->getUrl().'">'.$file->name.' </a> ('.$file->mime_type.', '.$file->human_readable_size.')</p>';
+
+        }
+		return $output;
+    }
 
     public function parse()
     {

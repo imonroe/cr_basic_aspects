@@ -28,19 +28,62 @@ class FileUploadAspect extends Aspect{
 
     public function create_form($subject_id, $aspect_type_id=null)
     {
-		return parent::create_form($subject_id, $this->aspect_type);
+		$form = \BootForm::horizontal(['url' => '/aspect/create', 'method' => 'post', 'files' => true]);
+        $form .= \BootForm::hidden('subject_id', $subject_id);
+        $form .= \BootForm::hidden('aspect_type', $aspect_type_id);
+        $form .= \BootForm::hidden('media_collection', 'uploads');
+        $form .= \BootForm::hidden('mime_type', 'all');
+        $form .= \BootForm::text('title', 'Title');
+        $form .= \BootForm::textarea('aspect_data', 'Description');
+        //$form .= \BootForm::text('aspect_source', 'File');
+        $form .= \BootForm::file('file_upload');
+        $form .= $this->notes_fields();
+        $form .= \BootForm::submit('Submit', ['class' => 'btn btn-primary']);
+        $form .= \BootForm::close();
+        return $form;
 	}
 
-    public function edit_form($id)
+    public function edit_form()
     {
-		return parent::edit_form($id);
+		$media_items = $this->media;
+        $output = '<h3>Currently attached files:</h3>';
+        $output .= '<ul>'.PHP_EOL;
+        foreach ($media_items as $file){
+        $output .= '<li><a href="'.$file->getUrl().'">'.$file->name.' </a> ('.$file->mime_type.', '.$file->human_readable_size.')</li>';
+        }
+        $output .= '</ul>'.PHP_EOL;
+
+        $form = \BootForm::horizontal(['url' => '/aspect/'.$this->id.'/edit', 'method' => 'post', 'files' => true]);
+        $form .= \BootForm::hidden('aspect_id', $this->id);
+        $form .= \BootForm::hidden('aspect_type', $this->aspect_type()->id);
+        $form .= \BootForm::hidden('media_collection', 'uploads');
+        $form .= \BootForm::hidden('mime_type', 'all');
+        $form .= \BootForm::text('title', 'Title', $this->title);
+        $form .= \BootForm::textarea('aspect_data', 'Description', $this->aspect_data);
+        //$form .= \BootForm::text('aspect_source', 'Source', $this->aspect_source);
+        //$form .= \BootForm::checkbox('hidden', 'Hidden?', $aspect->hidden);
+        //$form .= \BootForm::file('file_upload', 'Add Another File');
+        $form .= $this->notes_fields();
+        $form .= \BootForm::submit('Submit', ['class' => 'btn btn-primary']);
+        $form .= \BootForm::close();
+
+        $out = $output . $form;
+        return $out;
 	}
 
     public function display_aspect()
     {
-        $parent_output = parent::display_aspect();
-        $new_output = '<p>Some markup.</p>';
-		return $parent_output . $new_output;
+        // There will be uploaded file(s) associated with this aspect, so let's grab them.
+        $media_items = $this->media;
+        $output = '<div class="aspect_type-'.$this->aspect_type()->id.'">';
+        $output .= '<p>'.$this->aspect_data.'</p>'.PHP_EOL;
+        $output .= '<ul>'.PHP_EOL;
+        foreach ($media_items as $file){
+            $output .= '<li><a href="'.$file->getUrl().'">'.$file->name.' </a> ('.$file->mime_type.', '.$file->human_readable_size.')</li>';
+        }
+        $output .= '</ul>'.PHP_EOL;
+		$output .= '</div>';
+		return $output;
 	}
 
     public function parse()

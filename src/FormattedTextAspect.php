@@ -13,7 +13,7 @@ use imonroe\crps\Subject;
 use imonroe\ana\Ana;
 use Validator;
 
-class FormattedTextAspect extends Aspect{
+class FormattedTextAspect extends UnformattedTextAspect{
 
     function __construct()
     {
@@ -28,19 +28,38 @@ class FormattedTextAspect extends Aspect{
 
     public function create_form($subject_id, $aspect_type_id=null)
     {
-		return parent::create_form($subject_id, $this->aspect_type);
+		$form = \BootForm::horizontal(['url' => '/aspect/create', 'method' => 'post', 'files' => false]);
+        $form .= \BootForm::hidden('subject_id', $subject_id);
+        $form .= \BootForm::hidden('aspect_type', $aspect_type_id);
+        $form .= \BootForm::text('title', 'Title');
+        $form .= \BootForm::textarea('aspect_data', 'Formatted Text', '', ['class' => 'wysiwyg_editor', 'style' => 'width:100%;']);
+        $form .= \BootForm::text('aspect_source', 'Source');
+        //$form .= \BootForm::file('file_upload');
+        $form .= $this->notes_fields();
+        $form .= \BootForm::submit('Submit', ['class' => 'btn btn-primary']);
+        $form .= \BootForm::close();
+        return $form;
 	}
 
-    public function edit_form($id)
+    public function edit_form()
     {
-		return parent::edit_form($id);
+		$form = \BootForm::horizontal(['url' => '/aspect/'.$this->id.'/edit', 'method' => 'post', 'files' => true]);
+        $form .= \BootForm::hidden('aspect_id', $this->id);
+        $form .= \BootForm::hidden('aspect_type', $this->aspect_type()->id);
+        $form .= \BootForm::text('title', 'Title', $this->title);
+        $form .= \BootForm::textarea('aspect_data', 'Formatted Text', $this->aspect_data, ['class' => 'wysiwyg_editor', 'style' => 'width:100%;']);
+        $form .= \BootForm::text('aspect_source', 'Source', $this->aspect_source);
+        //$form .= \BootForm::checkbox('hidden', 'Hidden?', $this->hidden);
+        //$form .= \BootForm::file('file_upload');
+        $form .= $this->notes_fields();
+        $form .= \BootForm::submit('Submit', ['class' => 'btn btn-primary']);
+        $form .= \BootForm::close();
+        return $form;
 	}
 
     public function display_aspect()
     {
-        $parent_output = parent::display_aspect();
-        $new_output = '<p>Some markup.</p>';
-		return $parent_output . $new_output;
+        return $this->aspect_data;
 	}
 
     public function parse()

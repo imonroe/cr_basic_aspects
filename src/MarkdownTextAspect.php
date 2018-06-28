@@ -15,7 +15,7 @@ use Validator;
 use League\CommonMark\CommonMarkConverter;
 
 
-class MarkdownTextAspect extends Aspect{
+class MarkdownTextAspect extends UnformattedTextAspect{
 
     function __construct()
     {
@@ -33,16 +33,16 @@ class MarkdownTextAspect extends Aspect{
 		return parent::create_form($subject_id, $this->aspect_type);
 	}
 
-    public function edit_form($id)
+    public function edit_form()
     {
-		return parent::edit_form($id);
+		return parent::edit_form();
 	}
 
     public function display_aspect()
     {
-        $parent_output = parent::display_aspect();
-        $new_output = '<p>Some markup.</p>';
-		return $parent_output . $new_output;
+        $markdown_converter = new CommonMarkConverter();
+        $output = $markdown_converter->convertToHtml($this->aspect_data);
+        return $output;
 	}
 
     public function parse()
