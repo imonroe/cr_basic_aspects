@@ -1,0 +1,73 @@
+{
+    "name": "imonroe/cr_basic_aspects",
+    "type": "library",
+    "description": "Basic Aspect Types for the Coldreader software",
+    "keywords": [
+        "imonroe",
+        "cr_basic_aspects"
+    ],
+    "homepage": "https://github.com/imonroe/cr_basic_aspects",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ian Monroe",
+            "email": "ian@ianmonroe.com",
+            "homepage": "https://github.com/imonroe",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : "~7.1",
+        "imonroe/crps": "^1.3.1",
+        "imonroe/ana": "^1.0.5",
+        "league/commonmark": "^0.16"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : ">=5.4.3",
+        "squizlabs/php_codesniffer": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "imonroe\\cr_basic_aspects\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "imonroe\\cr_basic_aspects\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
+        "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "imonroe\\cr_basic_aspects\\cr_basic_aspectsServiceProvider"
+            ],
+            "aliases": {
+                "DefaultAspect": "imonroe\\cr_basic_aspects\\DefaultAspect",
+                "FileUploadAspect": "imonroe\\cr_basic_aspects\\FileUploadAspect",
+                "ImageAspect": "imonroe\\cr_basic_aspects\\ImageAspect",
+                "UnformattedTextAspect": "imonroe\\cr_basic_aspects\\UnformattedTextAspect",
+                "LamdaFunctionAspect": "imonroe\\cr_basic_aspects\\LamdaFunctionAspect",
+                "MarkdownTextAspect": "imonroe\\cr_basic_aspects\\MarkdownTextAspect",
+                "FormattedTextAspect": "imonroe\\cr_basic_aspects\\FormattedTextAspect",
+                "RelationshipAspect": "imonroe\\cr_basic_aspects\\RelationshipAspect"
+            }
+        },
+        "_comments": {
+            "To_Use_FACADES": "Move the lines below up to the laravel:array. See also: https://laravel.com/docs/5.6/packages",
+            "aliases": {
+                "cr_basic_aspects": "imonroe\\cr_basic_aspects\\cr_basic_aspectsFacade"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
