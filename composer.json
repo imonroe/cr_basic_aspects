@@ -51,7 +51,6 @@
                 "imonroe\\cr_basic_aspects\\cr_basic_aspectsServiceProvider"
             ],
             "aliases": {
-                "DefaultAspect": "imonroe\\cr_basic_aspects\\DefaultAspect",
                 "FileUploadAspect": "imonroe\\cr_basic_aspects\\FileUploadAspect",
                 "ImageAspect": "imonroe\\cr_basic_aspects\\ImageAspect",
                 "UnformattedTextAspect": "imonroe\\cr_basic_aspects\\UnformattedTextAspect",

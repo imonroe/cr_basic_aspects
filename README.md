@@ -12,12 +12,6 @@ Via Composer
 $ composer require imonroe/cr_basic_aspects
 ```
 
-## Usage
-
-``` php
-$skeleton = new imonroe\CrbasicaspectsAspect();
-```
-
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
@@ -43,7 +37,7 @@ If you discover any security related issues, please email ian@ianmonroe.com inst
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The GPL-3.0. Please see [License File](LICENSE.md) for more information.
 
 [link-author]: https://github.com/imonroe
 [link-contributors]: ../../contributors
